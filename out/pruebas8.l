@@ -1,0 +1,20 @@
+(setq global_var 10)
+(setq flag 0)
+(defun main ()
+(setq main_local_var 5)
+(setq main_result 0)
+(setf flag 1)
+(setf main_result 0)
+(if (= flag 1)
+(progn
+(print "La bandera es verdadera")
+(setf main_result (+ global_var main_local_var)))
+(progn
+(print "La bandera es falsa")
+(setf main_result 0))
+)
+(loop while (> main_local_var 0) do
+(princ main_local_var)
+(setf main_local_var (- main_local_var 1)))
+)
+(main)

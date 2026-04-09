@@ -18,6 +18,9 @@ char *my_malloc (int) ;
 char *gen_code (char *) ;
 char *int_to_string (int) ;
 char *char_to_string (char) ;
+void add_local_var(char *name) ;
+int is_local_var(char *name) ;
+char *get_var_name(char *name) ;
 
 char temp [2048] ;
 
@@ -103,9 +106,34 @@ var_decl:       IDENTIF                     { sprintf (temp, "(setq %s 0)", $1.c
                                               $$.code = gen_code (temp) ; }
             ;
 
+// Declaraciones locales dentro de funciones
+declaraciones_locales:  /* vacío */         { $$.code = gen_code("") ; }
+                    |   declaraciones_locales declarar_local {
+                                              if (strlen($1.code) == 0) {
+                                                  $$.code = $2.code ;
+                                              } else {
+                                                  sprintf (temp, "%s\n%s", $1.code, $2.code) ;
+                                                  $$.code = gen_code (temp) ;
+                                              } }
+                    ;
+
+declarar_local: INTEGER IDENTIF ';'         { add_local_var($2.code) ;
+                                              sprintf (temp, "(setq main_%s 0)", $2.code) ;
+                                              $$.code = gen_code (temp) ; }
+            |   INTEGER IDENTIF '=' expresion ';' {
+                                              add_local_var($2.code) ;
+                                              sprintf (temp, "(setq main_%s %s)", $2.code, $4.code) ;
+                                              $$.code = gen_code (temp) ; }
+            ;
+
 // FUNCIONES
-funcion_main:   MAIN '(' ')' '{' sentencias '}' { sprintf (temp, "(defun main ()\n%s\n)", $5.code) ;
-                                                  $$.code = gen_code (temp) ; }
+funcion_main:   MAIN '(' ')' '{' declaraciones_locales sentencias '}' {
+                                              if (strlen($5.code) == 0) {
+                                                  sprintf (temp, "(defun main ()\n%s\n)", $6.code) ;
+                                              } else {
+                                                  sprintf (temp, "(defun main ()\n%s\n%s\n)", $5.code, $6.code) ;
+                                              }
+                                              $$.code = gen_code (temp) ; }
             ;
 
 sentencias:     sentencia                   { $$ = $1 ; }
@@ -113,37 +141,43 @@ sentencias:     sentencia                   { $$ = $1 ; }
                                               $$.code = gen_code (temp) ; }
             ;
 
-sentencia:      IDENTIF '=' expresion ';'   { sprintf (temp, "(setq %s %s)", $1.code, $3.code) ; 
+sentencia:      IDENTIF '=' expresion ';'   { sprintf (temp, "(setf %s %s)", get_var_name($1.code), $3.code) ; 
                                               $$.code = gen_code (temp) ; }
             |   PUTS '(' STRING ')' ';'     { sprintf (temp, "(print \"%s\")", $3.code) ;
                                               $$.code = gen_code (temp) ; }
-            |   PRINTF '(' STRING ',' lista_elems_printf ')' ';'    { $$ = $5 ; }
-            |   WHILE '(' expresion ')' '{' sentencias '}'  { sprintf (temp, "(loop while %s do\n%s)", $3.code, $6.code) ;
-                                                              $$.code = gen_code (temp) ; }
-            |   IF '(' expresion ')' '{' bloque_condicional '}'     { sprintf (temp, "(if %s\n%s\n)", $3.code, $6.code) ;
-                                                              $$.code = gen_code (temp) ; }
+            |   PRINTF '(' STRING ',' lista_elems_printf ')' ';' { $$ = $5 ; }
+            |   WHILE '(' expresion ')' '{' sentencias '}' {
+                                              sprintf (temp, "(loop while %s do\n%s)", $3.code, $6.code) ;
+                                              $$.code = gen_code (temp) ; }
+            |   IF '(' expresion ')' '{' bloque_condicional '}' {
+                                              sprintf (temp, "(if %s\n%s\n)", $3.code, $6.code) ;
+                                              $$.code = gen_code (temp) ; }
             |   IF '(' expresion ')' '{' bloque_condicional '}' ELSE '{' bloque_condicional '}' {
-                                                              sprintf (temp, "(if %s\n%s\n%s\n)", $3.code, $6.code, $10.code) ;
-                                                              $$.code = gen_code (temp) ; }
+                                              sprintf (temp, "(if %s\n%s\n%s\n)", $3.code, $6.code, $10.code) ;
+                                              $$.code = gen_code (temp) ; }
             ;
 
 // Regla para capturar 2 o más sentencias
-lista_varias_sentencias:    sentencia sentencia { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
-                                                  $$.code = gen_code (temp) ; }
-                        |   lista_varias_sentencias sentencia   { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
-                                                                  $$.code = gen_code (temp) ; }
+lista_varias_sentencias:    sentencia sentencia {
+                                              sprintf (temp, "%s\n%s", $1.code, $2.code) ;
+                                              $$.code = gen_code (temp) ; }
+                        |   lista_varias_sentencias sentencia {
+                                              sprintf (temp, "%s\n%s", $1.code, $2.code) ;
+                                              $$.code = gen_code (temp) ; }
                         ;
 
 // El bloque condicional decide: 1 sentencia o varias (con progn)
-bloque_condicional:     sentencia               { $$ = $1 ; }
-                    |   lista_varias_sentencias { sprintf (temp, "(progn\n%s)", $1.code) ;
-                                                  $$.code = gen_code (temp) ; }
+bloque_condicional:     sentencia           { $$ = $1 ; }
+                    |   lista_varias_sentencias {
+                                              sprintf (temp, "(progn\n%s)", $1.code) ;
+                                              $$.code = gen_code (temp) ; }
                     ;
 
 lista_elems_printf: elem_printf             { sprintf (temp, "(princ %s)", $1.code) ;
                                               $$.code = gen_code (temp); }
-            |   lista_elems_printf ',' elem_printf  { sprintf (temp, "%s (princ %s)", $1.code, $3.code) ;
-                                                      $$.code = gen_code (temp) ; }
+            |   lista_elems_printf ',' elem_printf  {
+                                              sprintf (temp, "%s (princ %s)", $1.code, $3.code) ;
+                                              $$.code = gen_code (temp) ; }
             ;
 
 elem_printf:    expresion                   { $$ = $1 ; }
@@ -182,13 +216,13 @@ expresion:      termino                     { $$ = $1 ; }
                                               $$.code = gen_code (temp) ; }
             ;
 
-termino:        operando                           { $$ = $1 ; }                          
-            |   '+' operando %prec UNARY_SIGN      { $$ = $1 ; }
-            |   '-' operando %prec UNARY_SIGN      { sprintf (temp, "(- %s)", $2.code) ;
-                                                     $$.code = gen_code (temp) ; }    
+termino:        operando                    { $$ = $1 ; }                          
+            |   '+' operando %prec UNARY_SIGN   { $$ = $1 ; }
+            |   '-' operando %prec UNARY_SIGN   { sprintf (temp, "(- %s)", $2.code) ;
+                                                  $$.code = gen_code (temp) ; }    
             ;
 
-operando:       IDENTIF                     { sprintf (temp, "%s", $1.code) ;
+operando:       IDENTIF                     { sprintf (temp, "%s", get_var_name($1.code)) ;
                                               $$.code = gen_code (temp) ; }
             |   NUMBER                      { sprintf (temp, "%d", $1.value) ;
                                               $$.code = gen_code (temp) ; }
@@ -241,6 +275,35 @@ char *my_malloc (int nbytes)       // reserva n bytes de memoria dinamica
     nv++ ;
 
     return p ;
+}
+
+char local_vars[100][256];
+int num_local_vars = 0;
+
+void add_local_var(char *name) {
+    if (num_local_vars < 100) {
+        strcpy(local_vars[num_local_vars], name);
+        num_local_vars++;
+    }
+}
+
+int is_local_var(char *name) {
+    for (int i = 0; i < num_local_vars; i++) {
+        if (strcmp(local_vars[i], name) == 0) {
+            return 1; // Verdadero: es local
+        }
+    }
+    return 0; // Falso: es global
+}
+
+// Esta función devuelve "main_x" si es local, o "x" si es global
+char *get_var_name(char *name) {
+    if (is_local_var(name)) {
+        char temp_name[512];
+        sprintf(temp_name, "main_%s", name);
+        return gen_code(temp_name);
+    }
+    return name;
 }
 
 
