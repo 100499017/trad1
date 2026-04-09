@@ -1,10 +1,10 @@
-all: trad9
+all: trad10
 
-trad9: trad9.tab.c
-	gcc trad9.tab.c -o trad9 -lfl -w
+trad10: trad10.tab.c
+	gcc trad10.tab.c -o trad10 -lfl -w
 
-trad9.tab.c trad9.tab.h: trad9.y
-	bison -d trad9.y
+trad10.tab.c trad10.tab.h: trad10.y
+	bison -d trad10.y
 
 clean:
-	rm -f trad9.tab.c trad9.tab.h trad9
+	rm -f trad10.tab.c trad10.tab.h trad10
