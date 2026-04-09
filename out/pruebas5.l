@@ -1,0 +1,6 @@
+(setq a 5) (setq b 2)
+(defun main ()
+	(princ (and (= (+ a b) 7) (not (< a b))))
+	(princ (or (/= (mod a 2) 0) (>= b 5)))
+)
+(main)

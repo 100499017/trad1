@@ -1,0 +1,5 @@
+(setq a 0)
+(defun main ()
+	(print (+ a 1))
+)
+(main)

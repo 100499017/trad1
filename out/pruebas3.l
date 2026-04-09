@@ -1,0 +1,6 @@
+(setq a 2)
+(defun main ()
+	(print "Hola mundo")
+	(print (+ a 1))
+)
+(main)
