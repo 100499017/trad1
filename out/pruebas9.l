@@ -1,0 +1,13 @@
+(setq limite 3)
+(defun main ()
+(setq main_i 0)
+(setq main_suma 0)
+(setf main_i 0)
+(loop while (< main_i limite) do
+(setf main_suma (+ main_suma main_i))
+(if (= main_suma 2)
+(setf limite (- limite 1))
+)
+(setf main_i (+ main_i 1)))
+)
+(main)
