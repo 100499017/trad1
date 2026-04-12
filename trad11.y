@@ -93,8 +93,7 @@ programa:       declaraciones_opt funciones_opt funcion_main  { sprintf (temp, "
             ;
 
 // TIPOS PARA LAS VARIABLES
-tipo:   /* vacio */ { $$.code = gen_code ("") ; }
-    |   INTEGER     { $$ = $1; }
+tipo:   INTEGER     { $$.code = gen_code ($1.code); }
     ;
 
 // DECLARACIONES GLOBALES

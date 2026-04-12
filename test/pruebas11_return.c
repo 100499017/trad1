@@ -1,12 +1,12 @@
 // Función con retorno estructurado (Punto i)
-sumar_estructurado(a, b) {
+sumar_estructurado(int a, int b) {
     int resultado;
     resultado = a + b;
     return resultado;
 }
 
 // Función con retornos intermedios "mala praxis" (Punto ii)
-valor_absoluto(n) {
+valor_absoluto(int n) {
     if (n < 0) {
         return -n;  // Retorno intermedio (Punto ii) duda sobre como añadirlo
     }
@@ -14,7 +14,7 @@ valor_absoluto(n) {
 }
 
 // Función que se usará como procedimiento (Punto d)
-test_procedimiento(x) {
+test_procedimiento(int x) {
     printf("no imprime", " Ejecutando funcion auxiliar con valor: ", x);
     return 100; // Devuelve un valor, pero lo ignoraremos
 }
