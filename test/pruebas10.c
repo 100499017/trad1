@@ -16,4 +16,6 @@ main() {
             resultado = global;
             break;
     }
+    // Añadimos esto para ver qué valor quedó en 'resultado'
+    printf("Resultado final del switch: ", resultado);
 }

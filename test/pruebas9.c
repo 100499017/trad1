@@ -10,4 +10,6 @@ main () {
             limite = limite - 1;
         }
     }
+    // Añadimos esto para ver el resultado en la terminal
+    printf("El resultado de la suma es: ", suma); 
 }
