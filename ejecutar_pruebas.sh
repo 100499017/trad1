@@ -5,15 +5,15 @@ mkdir -p luis
 
 # 2. Compilar según tu método
 echo "--- Compilando traductor (Solo Bison) ---"
-bison -d trad11.y
+bison -d trad12.y
 
 # Compilamos el archivo generado. 
-# Nota: Si yylex() está dentro de trad11.y, esto es suficiente.
+# Nota: Si yylex() está dentro de trad12.y, esto es suficiente.
 # Quitamos -lfl porque no usas la librería de Flex.
-gcc trad11.tab.c -o traductor -w
+gcc trad12.tab.c -o traductor -w
 
 if [ $? -ne 0 ]; then
-    echo "Error en la compilación. Revisa el código C dentro de trad11.y"
+    echo "Error en la compilación. Revisa el código C dentro de trad12.y"
     exit 1
 fi
 
