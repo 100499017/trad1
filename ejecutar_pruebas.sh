@@ -1,37 +1,47 @@
 #!/bin/bash
 
-# 1. Crear directorio de salida
-mkdir -p luis
+# Crear la estructura de carpetas de salida si no existe
+mkdir -p out/00 out/01 out/02 out/03
 
-# 2. Compilar según tu método
-echo "--- Compilando traductor (Solo Bison) ---"
-bison -d trad12.y
+# Array con las subcarpetas a procesar
+carpetas=("00" "01" "02" "03")
 
-# Compilamos el archivo generado. 
-# Nota: Si yylex() está dentro de trad12.y, esto es suficiente.
-# Quitamos -lfl porque no usas la librería de Flex.
-gcc trad12.tab.c -o traductor -w
+echo "--- Iniciando proceso de traducción y ejecución ---"
 
-if [ $? -ne 0 ]; then
-    echo "Error en la compilación. Revisa el código C dentro de trad12.y"
-    exit 1
-fi
+for dir in "${carpetas[@]}"; do
+    echo ""
+    echo "===================================="
+    echo " PROCESANDO CARPETA: test/$dir/"
+    echo "===================================="
 
-# 3. Procesar las pruebas
-echo -e "\n--- Ejecutando pruebas ---"
-for prueba in test/01/*.c; do
-    base=$(basename "$prueba" .c)
-    
-    echo "------------------------------------"
-    echo "Procesando: $base"
-    
-    # Generar la entrada transformada en la carpeta out
-    ./traductor < "$prueba" > "luis/$base.l"
-    
-    if [ $? -eq 0 ]; then
-        echo "Resultado en Lisp:"
-        clisp "luis/$base.l"
+    # Comprobar si hay archivos .c en la carpeta
+    if [ -n "$(ls test/$dir/*.c 2>/dev/null)" ]; then
+        for archivo_c in test/$dir/*.c; do
+            # Obtener el nombre del archivo sin extensión y sin ruta
+            nombre_base=$(basename "$archivo_c" .c)
+            archivo_lsp="out/$dir/$nombre_base.lsp"
+
+            echo "[C] -> $archivo_c"
+
+            # 1. Ejecutar el traductor trad12
+            # Se asume que trad12 lee de la entrada estándar y escribe en la salida
+            ./trad12 < "$archivo_c" > "$archivo_lsp"
+
+            if [ $? -eq 0 ]; then
+                echo "[LISP] Generado en: $archivo_lsp"
+                echo "[SALIDA CLISP]:"
+                echo "---------------------------------------"
+                # 2. Ejecutar el archivo generado con clisp
+                clisp "$archivo_lsp"
+                echo "---------------------------------------"
+            else
+                echo "[ERROR] Falló la traducción de $archivo_c"
+            fi
+            echo ""
+        done
     else
-        echo "Error al traducir $prueba"
+        echo "No se encontraron archivos .c en test/$dir/"
     fi
 done
+
+echo "--- Proceso finalizado ---"

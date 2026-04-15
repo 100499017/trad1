@@ -1,0 +1,25 @@
+
+
+(defun fibonacci (n)
+(setq fibonacci_retorno 0)
+
+(if (< n 2)
+(setf fibonacci_retorno 1)
+(setf fibonacci_retorno (+ (fibonacci (- n 1)) (fibonacci (- n 2))))
+)
+(return-from fibonacci fibonacci_retorno)
+)
+(defun main ()
+(setq main_resultado 0)
+(setq main_i 0)
+
+(print "Sucesion de Fibonacci")
+(setf main_i 2)
+(loop while (< main_i 50) do
+
+(setf main_resultado (fibonacci main_i))
+(princ main_i) (princ " ") (princ main_resultado)
+(print " ")
+(setf main_i (+ main_i 1)))
+)
+ (main) 
