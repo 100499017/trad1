@@ -1,0 +1,7 @@
+
+
+(defun main ()
+
+(princ (+ 123 1))
+)
+ (main)

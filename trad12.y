@@ -88,7 +88,7 @@ axioma:         programa                    { printf ("%s\n", $1.code) ; }
             ;
 
 // Estructura principal: Variables globales seguidas de la función main (o sólo main)
-programa:       declaraciones_opt funciones_opt funcion_main  { sprintf (temp, "%s\n%s\n%s\n(main)", $1.code, $2.code, $3.code) ;
+programa:       declaraciones_opt funciones_opt funcion_main  { sprintf (temp, "%s\n%s\n%s", $1.code, $2.code, $3.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
 
@@ -150,18 +150,13 @@ funciones_opt:  /* vacio */                { $$.code = gen_code("") ; }
                                               $$.code = gen_code (temp) ; }
             ;
 
-funcion:        IDENTIF {nombre_funcion = gen_code ($1.code) ; } '(' lista_parametros_opt ')' '{' declaraciones_locales_opt sentencias return_final '}'    {
+funcion:        IDENTIF {nombre_funcion = gen_code ($1.code) ; } '(' lista_parametros_opt ')' '{' declaraciones_locales_opt sentencias '}'    {
                                               if (strlen($7.code) == 0) {
-                                                  sprintf (temp, "(defun %s (%s)\n%s\n%s\n)", $1.code, $4.code, $8.code, $9.code) ;
+                                                  sprintf (temp, "(defun %s (%s)\n%s\n)", $1.code, $4.code, $8.code) ;
                                               } else {
-                                                  sprintf (temp, "(defun %s (%s)\n%s\n%s\n%s\n)", $1.code, $4.code, $7.code, $8.code, $9.code) ;
+                                                  sprintf (temp, "(defun %s (%s)\n%s\n%s\n)", $1.code, $4.code, $7.code, $8.code) ;
                                               }
                                               $$.code = gen_code (temp) ; }
-            ;
-
-return_final:           /* vacio */                     { $$.code = gen_code ("") ; }
-            |            RETURN expresion ';'            { $$.code = gen_code ($2.code) ;   // caso 1 return al final
-                                                        }
             ;
 
 lista_parametros_opt:   /* vacio */                         { $$.code = gen_code ("") ; }
@@ -179,11 +174,11 @@ lista_argumentos_opt:   /* vacio */                         { $$.code = gen_code
                                                             $$.code = gen_code (temp) ; }
             ;
 
-funcion_main:   MAIN {nombre_funcion = gen_code ($1.code) ; } '(' ')' '{' declaraciones_locales_opt sentencias return_final '}' {
+funcion_main:   MAIN {nombre_funcion = gen_code ($1.code) ; } '(' ')' '{' declaraciones_locales_opt sentencias '}' {
                                               if (strlen($6.code) == 0) {
-                                                  sprintf (temp, "(defun main ()\n%s\n%s\n)", $7.code, $8.code) ;
+                                                  sprintf (temp, "(defun main ()\n%s\n)", $7.code) ;
                                               } else {
-                                                  sprintf (temp, "(defun main ()\n%s\n%s\n%s\n)", $6.code, $7.code, $8.code) ;
+                                                  sprintf (temp, "(defun main ()\n%s\n%s\n)", $6.code, $7.code) ;
                                               }
                                               $$.code = gen_code (temp) ; }
             ;

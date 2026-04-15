@@ -19,7 +19,7 @@ fi
 
 # 3. Procesar las pruebas
 echo -e "\n--- Ejecutando pruebas ---"
-for prueba in test/pruebas*.c; do
+for prueba in test/01/*.c; do
     base=$(basename "$prueba" .c)
     
     echo "------------------------------------"
