@@ -13,10 +13,11 @@
 
 (print "Sucesion de Fibonacci")
 (setf main_i 0)
-(loop while (< main_i 47) do
+(loop while (< main_i 30) do
 
 (setf main_resultado (fibonacci 0 1 main_i))
-(princ main_i) (princ " ") (princ main_resultado)
+(progn (princ main_i)
+(princ " ") (princ main_resultado))
 (print " ")
 (setf main_i (+ main_i 1)))
 )

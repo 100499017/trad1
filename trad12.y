@@ -218,7 +218,12 @@ sentencia:      IDENTIF '=' expresion ';'   { sprintf (temp, "(setf %s %s)", get
                                               $$.code = gen_code (temp) ; }
             |   PUTS '(' STRING ')' ';'     { sprintf (temp, "(print \"%s\")", $3.code) ;
                                               $$.code = gen_code (temp) ; }
-            |   PRINTF '(' STRING ',' lista_elems_printf ')' ';' { $$ = $5 ; }
+            |   PRINTF '(' STRING ',' elem_printf ')' ';' {
+                                              sprintf (temp, "(princ %s)", $5.code) ;
+                                              $$.code = gen_code (temp) ; }
+            |   PRINTF '(' STRING ',' elem_printf ',' lista_elems_printf ')' ';' {
+                                              sprintf (temp, "(progn (princ %s)\n%s)", $5.code, $7.code) ;
+                                              $$.code = gen_code (temp) ;}
             |   WHILE '(' expresion ')' '{' sentencias '}' {
                                               sprintf (temp, "(loop while %s do\n%s)", $3.code, $6.code) ;
                                               $$.code = gen_code (temp) ; }
@@ -260,7 +265,7 @@ lista_varias_sentencias:    sentencia sentencia {
 // El bloque condicional decide: 1 sentencia o varias (con progn)
 bloque_condicional:     sentencia           { $$ = $1 ; }
                     |   lista_varias_sentencias {
-                                              sprintf (temp, "(progn\n%s)", $1.code) ;
+                                              sprintf (temp, "(progn %s)", $1.code) ;
                                               $$.code = gen_code (temp) ; }
                     ;
 

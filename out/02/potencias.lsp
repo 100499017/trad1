@@ -15,7 +15,8 @@
 (setf main_i 1)
 (loop while (<= main_i m) do
 
-(princ main_i) (princ " ") (princ (aref potencias main_i))
+(progn (princ main_i)
+(princ " ") (princ (aref potencias main_i)))
 (print "")
 (setf main_i (+ main_i 1)))
 )

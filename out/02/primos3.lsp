@@ -25,7 +25,8 @@
 (loop while (< main_i m) do
 
 (if (= (aref primos main_i) 1)
-(princ main_i) (princ " ")
+(progn (princ main_i)
+(princ " "))
 )
 (setf main_i (+ main_i 1)))
 )

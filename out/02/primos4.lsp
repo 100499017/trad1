@@ -22,7 +22,8 @@
 (loop while (< n m) do
 
 (if (/= (esprimo n) 0)
-(princ n) (princ " ")
+(progn (princ n)
+(princ " "))
 )
 (setf n (+ n 1)))
 )

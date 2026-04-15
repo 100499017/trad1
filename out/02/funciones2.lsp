@@ -11,6 +11,7 @@
 (setq main_c 0)
 
 (setf main_c (mifuncion ))
-(princ main_c) (princ " ") (princ (mifuncion ))
+(progn (princ main_c)
+(princ " ") (princ (mifuncion )))
 )
  (main)

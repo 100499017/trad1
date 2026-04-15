@@ -3,7 +3,8 @@
 (defun factoriala (n f fm)
 
 (if (= n 1)
-(princ f) (princ " ")
+(progn (princ f)
+(princ " "))
 (factoriala (- n 1) (* f fm) (- fm 1))
 )
 )

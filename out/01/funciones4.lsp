@@ -2,7 +2,8 @@
 
 (defun cuadrado (n)
 
-(princ n) (princ " ") (princ (* n n))
+(progn (princ n)
+(princ " ") (princ (* n n)))
 (print "")
 )
 (defun main ()

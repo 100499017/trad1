@@ -3,7 +3,8 @@
 (defun collatz (n cont)
 (setq collatz_retorno 0)
 
-(princ n) (princ " ")
+(progn (princ n)
+(princ " "))
 (if (= n 1)
 (setf collatz_retorno cont)
 (if (= (mod n 2) 0)
@@ -22,7 +23,8 @@
 (loop while (< main_i 100) do
 
 (setf main_resultado (collatz main_i 0))
-(princ main_i) (princ " ") (princ main_resultado)
+(progn (princ main_i)
+(princ " ") (princ main_resultado))
 (print " ")
 (setf main_i (+ main_i 1)))
 )
