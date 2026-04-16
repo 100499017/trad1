@@ -1,5 +1,0 @@
-(setq a 5)
-(defun main ()
-	(princ "Valor: ") (princ a) (princ "Doble: ") (princ (* a 2))
-)
-(main)

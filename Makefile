@@ -1,10 +1,11 @@
-all: trad12
+all: back1
 
-trad12: trad12.tab.c
-	gcc trad12.tab.c -o trad12 -lfl -w
+back1: back1.tab.c
+	gcc back1.tab.c -o back1 -lfl -w
+	rm -f back1.tab.c back1.tab.h
 
-trad12.tab.c trad12.tab.h: trad12.y
-	bison -d trad12.y
+back1.tab.c back1.tab.h: back1.y
+	bison -d back1.y
 
 clean:
-	rm -f trad12.tab.c trad12.tab.h trad12
+	rm -f back1.tab.c back1.tab.h back1

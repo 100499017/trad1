@@ -25,7 +25,7 @@ for dir in "${carpetas[@]}"; do
 
             # 1. Ejecutar el traductor trad12
             # Se asume que trad12 lee de la entrada estándar y escribe en la salida
-            ./trad12 < "$archivo_c" > "$archivo_lsp"
+            ./trad3 < "$archivo_c" > "$archivo_lsp"
 
             if [ $? -eq 0 ]; then
                 echo "[LISP] Generado en: $archivo_lsp"

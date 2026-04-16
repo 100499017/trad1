@@ -3,11 +3,9 @@
 (defun mimax (a b)
 
 (if (>= a b)
-(progn
-(princ a)
+(progn (princ a)
 (print " "))
-(progn
-(princ b)
+(progn (princ b)
 (print " "))
 )
 )
