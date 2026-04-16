@@ -1,3 +1,3 @@
  : main
- ;
+ ."  El texto se imprime "  ;
  main
