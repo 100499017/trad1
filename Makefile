@@ -1,11 +1,11 @@
-all: back5
+all: back6
 
-back5: back5.tab.c
-	gcc back5.tab.c -o back5 -lfl -w
-	rm -f back5.tab.c back5.tab.h
+back6: back6.tab.c
+	gcc back6.tab.c -o back6 -lfl -w
+	rm -f back6.tab.c back6.tab.h
 
-back5.tab.c back5.tab.h: back5.y
-	bison -d back5.y
+back6.tab.c back6.tab.h: back6.y
+	bison -d back6.y
 
 clean:
-	rm -f back5
+	rm -f back6

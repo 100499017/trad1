@@ -20,7 +20,7 @@ for dir in "${carpetas[@]}"; do
             echo "[LISP] -> $archivo_lsp"
             
             # 1. Ejecutar el backend (Lisp a Forth)
-            ./back5 < "$archivo_lsp" > "$archivo_fth"
+            ./back6 < "$archivo_lsp" > "$archivo_fth"
 
             if [ $? -eq 0 ]; then
                 echo "[POSTFIJO] Generado en: $archivo_fth"
