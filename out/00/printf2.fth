@@ -1,2 +1,3 @@
  : main
-
+ 123  1  +  .  ."  el texto se imprime "  124  1  +  .  ;
+ main
