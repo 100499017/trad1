@@ -8,4 +8,4 @@ back1.tab.c back1.tab.h: back1.y
 	bison -d back1.y
 
 clean:
-	rm -f back1.tab.c back1.tab.h back1
+	rm -f back1

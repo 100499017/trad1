@@ -1,3 +1,8 @@
+/*
+    208, Alberto Socorro Gallardo, Luis Estrada Tallón
+    100499017@alumnos.uc3m.es, 100499101@alumnos.uc3m.es
+*/
+
 %{                          // SECTION 1 Declarations for C-Bison
 #include <stdio.h>
 #include <ctype.h>            // tolower()
@@ -69,7 +74,7 @@ r_exprSeq:    exprSeq                           { ; }
 expression1:  expression                        { ; }  // Lisp can evaluate arithmetical (and similar) expressions in REPL mode
                                                        // REPL Mode should print out the evaluated expressions ==> Future TODO for the Forth translation
 
-            | '(' SETQ IDENTIF number ')'       { /* */ }  // This is the declaration of a variable which in Forth has to be of global scope
+            | '(' SETQ IDENTIF number ')'       { printf ("variable %s %s !", $3.code, $3.code) ; }  // This is the declaration of a variable which in Forth has to be of global scope
                                                                                                       
             | '(' SETF /* */ ')'                { /* */ }    // Using a variable as receiver requires adding the store operator (!) in Forth 
 
@@ -202,6 +207,8 @@ t_keyword keywords [] = {     // define the keywords
     "and",         AND,
     "if",          IF,
     "progn",       PROGN,
+    "setq",        SETQ,      // Añadido para declarar variables
+    "setf",        SETF,      // Añadido para asignar variables
     NULL,          0          // 0 to mark the end of the table
 } ;
 
