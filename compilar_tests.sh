@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Array con las carpetas a procesar
-carpetas=("test/00" "test/01" "test/02" "test/03")
+carpetas=("test/00" "test/01" "test/02" "test/03" "test/04" "test/05")
 
 echo "--- Iniciando compilación de archivos C de test ---"
 

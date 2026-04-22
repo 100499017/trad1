@@ -1,3 +1,6 @@
+#define inc(x) (++(x))
+#define dec(x) (--(x))
+
 int j = 0;
 
 main() {

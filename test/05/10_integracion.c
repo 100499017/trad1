@@ -1,3 +1,6 @@
+#define inc(x) (++(x))
+#define dec(x) (--(x))
+
 int global_val = 0;
 
 procesar(int x) {
