@@ -112,8 +112,8 @@ declaracion_vector:     tipo IDENTIF '[' NUMBER ']' ';'     { sprintf (temp, "(s
                                                             $$.code = gen_code (temp) ; }
             ;
 
-lista_vars:     var_decl                    { $$ = $1 ; }
-            |   lista_vars ',' var_decl     { sprintf (temp, "%s %s", $1.code, $3.code) ;
+lista_vars:     var_decl                    { $$.code = gen_code ($1.code) ; }
+            |   var_decl ',' lista_vars     { sprintf (temp, "%s %s", $1.code, $3.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
 
