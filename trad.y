@@ -98,9 +98,9 @@ tipo:   INTEGER     { $$.code = gen_code ($1.code); }
 
 // DECLARACIONES GLOBALES
 declaraciones_opt:  /* vacio */              { $$.code = gen_code ("") ; }
-            |   declaraciones_opt declaracion   { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
+            |   declaracion declaraciones_opt   { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
-            |   declaraciones_opt declaracion_vector    { sprintf (temp, "%s\n%s", $1.code, $2.code) ; 
+            |   declaracion_vector declaraciones_opt    { sprintf (temp, "%s\n%s", $1.code, $2.code) ; 
                                                         $$.code = gen_code (temp) ; }
             ;
 
@@ -125,9 +125,9 @@ var_decl:       IDENTIF                     { sprintf (temp, "(setq %s 0)", $1.c
 
 // Declaraciones locales dentro de funciones
 declaraciones_locales_opt:  /* vacío */         { $$.code = gen_code("") ; }
-                    |   declaraciones_locales_opt declarar_local {
-                                              if (strlen($1.code) == 0) {
-                                                  $$.code = gen_code($2.code) ;
+                    |   declarar_local declaraciones_locales_opt {
+                                              if (strlen($2.code) == 0) {
+                                                  $$.code = gen_code($1.code) ;
                                               } else {
                                                   sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                                   $$.code = gen_code (temp) ;
@@ -145,8 +145,8 @@ declarar_local: tipo IDENTIF ';'         { add_local_var($2.code) ;
             ;
 
 // FUNCIONES
-funciones_opt:  /* vacio */                { $$.code = gen_code("") ; }
-            |   funciones_opt funcion       { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
+funciones_opt:  /* vacio */                 { $$.code = gen_code("") ; }
+            |   funcion funciones_opt       { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
 
@@ -160,8 +160,11 @@ funcion:        IDENTIF {nombre_funcion = gen_code ($1.code) ; } '(' lista_param
             ;
 
 lista_parametros_opt:   /* vacio */                         { $$.code = gen_code ("") ; }
-            |           parametro                             { $$.code = gen_code ($1.code) ; }
-            |           lista_parametros_opt ',' parametro    { sprintf(temp, "%s %s", $1.code, $3.code) ;
+            |           lista_parametros                    { $$.code = gen_code ($1.code) ; }
+            ;
+
+lista_parametros:       parametro                             { $$.code = gen_code ($1.code) ; }
+            |           parametro ',' lista_parametros    { sprintf(temp, "%s %s", $1.code, $3.code) ;
                                                             $$.code = gen_code (temp) ; }
             ;
 
@@ -169,8 +172,11 @@ parametro:              tipo IDENTIF    { $$.code = gen_code ($2.code) ; }
             ;
 
 lista_argumentos_opt:   /* vacio */                         { $$.code = gen_code ("") ; }
-            |           expresion                { $$.code = gen_code ($1.code) ; }
-            |           lista_argumentos_opt ',' expresion  { sprintf (temp, "%s %s", $1.code, $3.code) ; 
+            |           lista_argumentos                    { $$.code = gen_code ($1.code) ; }
+            ;
+
+lista_argumentos:       expresion                           { $$.code = gen_code ($1.code) ; }
+            |           expresion ',' lista_argumentos          { sprintf (temp, "%s %s", $1.code, $3.code) ; 
                                                             $$.code = gen_code (temp) ; }
             ;
 
@@ -184,7 +190,7 @@ funcion_main:   MAIN {nombre_funcion = gen_code ($1.code) ; } '(' ')' '{' declar
             ;
 
 sentencias:     /* vacio */                   { $$.code = gen_code ("") ; }
-            |   sentencias sentencia        { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
+            |   sentencia sentencias        { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
 
@@ -196,8 +202,8 @@ operacion_inc_dec:  INC '(' IDENTIF ')'     { sprintf (temp, "(setf %s (+ %s 1))
             ;
 
 // Reglas para los casos del switch
-casos:          caso                        { $$.code = $1.code ; }
-            |   casos caso                  { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
+casos:          caso                        { $$.code = gen_code ($1.code) ; }
+            |   caso casos                  { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
 
@@ -257,7 +263,7 @@ sentencia:      IDENTIF '=' expresion ';'   { sprintf (temp, "(setf %s %s)", get
 lista_varias_sentencias:    sentencia sentencia {
                                               sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
-                        |   lista_varias_sentencias sentencia {
+                        |   sentencia lista_varias_sentencias {
                                               sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
                         ;
@@ -271,8 +277,8 @@ bloque_condicional:     sentencia           { $$ = $1 ; }
 
 lista_elems_printf: elem_printf             { sprintf (temp, "(princ %s)", $1.code) ;
                                               $$.code = gen_code (temp); }
-            |   lista_elems_printf ',' elem_printf  {
-                                              sprintf (temp, "%s (princ %s)", $1.code, $3.code) ;
+            |   elem_printf ',' lista_elems_printf  {
+                                              sprintf (temp, "(princ %s) %s", $1.code, $3.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
 
