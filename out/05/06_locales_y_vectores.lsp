@@ -1,0 +1,12 @@
+
+
+(defun main ()
+(setq arr (make-array 5))
+(setq main_local_var 42)
+
+(print "Asignando a vector y variable local")
+(setf (aref arr 0) main_local_var)
+(print "Imprimiendo posicion 0 del array:")
+(princ (aref arr 0))
+)
+ (main)

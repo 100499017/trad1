@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Crear la estructura de carpetas de salida si no existe
-mkdir -p out/00 out/01 out/02 out/03
+mkdir -p out/00 out/01 out/02 out/03 out/04 out/05
 
 # Array con las subcarpetas a procesar
-carpetas=("00" "01" "02" "03")
+carpetas=("00" "01" "02" "03" "04" "05")
 
 echo "--- Iniciando proceso de traducción y ejecución ---"
 
@@ -23,15 +23,15 @@ for dir in "${carpetas[@]}"; do
 
             echo "[C] -> $archivo_c"
 
-            # 1. Ejecutar el traductor trad12
-            # Se asume que trad12 lee de la entrada estándar y escribe en la salida
-            ./trad3 < "$archivo_c" > "$archivo_lsp"
+            # Ejecutar el traductor trad
+            # Se asume que trad lee de la entrada estándar y escribe en la salida
+            ./trad < "$archivo_c" > "$archivo_lsp"
 
             if [ $? -eq 0 ]; then
                 echo "[LISP] Generado en: $archivo_lsp"
                 echo "[SALIDA CLISP]:"
                 echo "---------------------------------------"
-                # 2. Ejecutar el archivo generado con clisp
+                # Ejecutar el archivo generado con clisp
                 clisp "$archivo_lsp"
                 echo "---------------------------------------"
             else

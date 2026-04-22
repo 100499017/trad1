@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Solo procesamos la carpeta 00
-carpetas=("00")
+carpetas=("00" "04")
 
 echo "--- Iniciando Traducción Backend y Ejecución Forth ---"
 
@@ -20,7 +20,7 @@ for dir in "${carpetas[@]}"; do
             echo "[LISP] -> $archivo_lsp"
             
             # 1. Ejecutar el backend (Lisp a Forth)
-            ./back8 < "$archivo_lsp" > "$archivo_fth"
+            ./back < "$archivo_lsp" > "$archivo_fth"
 
             if [ $? -eq 0 ]; then
                 echo "[POSTFIJO] Generado en: $archivo_fth"
