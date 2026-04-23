@@ -1,10 +1,9 @@
-
 (setq x 15)
 (setq y 5)
 (setq res 0)
 
-(defun main ()
 
+(defun main ()
 (print "Probando operaciones aritméticas:")
 (setf res (+ x y))
 (progn (princ res)
@@ -20,5 +19,6 @@
 (princ " "))
 (setf res (mod x y))
 (princ res)
+
 )
  (main)

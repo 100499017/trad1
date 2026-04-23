@@ -1,9 +1,8 @@
-
 (setq a 1)
 (setq b 0)
 
-(defun main ()
 
+(defun main ()
 (print "Probando logica y relacionales:")
 (if (> a b)
 (print "1 es mayor a 0")
@@ -29,5 +28,6 @@
 (if (or a b)
 (print "A o B es verdadero")
 )
+
 )
  (main)

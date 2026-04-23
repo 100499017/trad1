@@ -1,11 +1,11 @@
 
-
 (defun mifuncion ()
-
 (print "Una prueba")
-)
-(defun main ()
 
+)
+
+(defun main ()
 (mifuncion )
+
 )
  (main)

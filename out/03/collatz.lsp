@@ -1,8 +1,6 @@
 
-
 (defun collatz (n cont)
 (setq collatz_retorno 0)
-
 (progn (princ n)
 (princ " "))
 (if (= n 1)
@@ -13,19 +11,21 @@
 )
 )
 (return-from collatz collatz_retorno)
+
 )
+
 (defun main ()
 (setq main_resultado 0)
 (setq main_i 0)
-
 (print "Sucesion de Collatz")
 (setf main_i 2)
 (loop while (< main_i 100) do
-
 (setf main_resultado (collatz main_i 0))
 (progn (princ main_i)
 (princ " ") (princ main_resultado))
 (print " ")
+
 (setf main_i (+ main_i 1)))
+
 )
  (main)

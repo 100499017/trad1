@@ -1,4 +1,3 @@
-
 (setq primo 0)
 (setq n 0)
 (setq m 0)
@@ -6,26 +5,27 @@
 (setq i 0)
 (setq p 0)
 
-(defun main ()
 
+(defun main ()
 (setf i 1)
 (setf n 1)
 (setf m 100)
 (setf i 2)
 (loop while (< i m) do
-
 (setf primo 1)
 (setf d 2)
 (loop while (< d i) do
-
 (if (= (mod i d) 0)
 (setf primo 0)
 )
-(setf d (+ d 1)))
+(setf d (+ d 1))
+)
 (if (/= primo 0)
 (progn (princ i)
 (princ " "))
 )
-(setf i (+ i 1)))
+(setf i (+ i 1))
+)
+
 )
  (main)

@@ -1,8 +1,6 @@
 
-
 (defun factorial (n)
 (setq factorial_retorno 0)
-
 (if (= n 1)
 (setf factorial_retorno 1)
 (setf factorial_retorno (* n (factorial (- n 1))))
@@ -11,11 +9,13 @@
 (princ " ") (princ factorial_retorno))
 (print " ")
 (return-from factorial factorial_retorno)
+
 )
+
 (defun main ()
 (setq main_resultado 0)
-
 (setf main_resultado (factorial 7))
 (princ main_resultado)
+
 )
  (main)

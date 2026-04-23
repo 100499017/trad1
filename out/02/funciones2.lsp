@@ -1,17 +1,17 @@
 
-
 (defun mifuncion ()
 (setq mifuncion_c 0)
-
 (setf mifuncion_c 123)
 (print "Prueba")
 (return-from mifuncion (+ mifuncion_c 1))
+
 )
+
 (defun main ()
 (setq main_c 0)
-
 (setf main_c (mifuncion ))
 (progn (princ main_c)
 (princ " ") (princ (mifuncion )))
+
 )
  (main)

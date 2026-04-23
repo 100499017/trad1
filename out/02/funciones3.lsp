@@ -1,15 +1,14 @@
 
-
 (defun cuadrado (a)
 (setq cuadrado_c 0)
-
 (setf cuadrado_c (* a a))
 (return-from cuadrado cuadrado_c)
+
 )
+
 (defun main ()
 (setq main_a 0)
 (setq main_c 0)
-
 (setf main_a 7)
 (print "El cuadrado de ")
 (princ main_a)
@@ -20,5 +19,6 @@
 (progn (princ "El cuadrado de ")
 (princ main_a) (princ " es: ") (princ (cuadrado main_a)))
 (print " ")
+
 )
  (main)
