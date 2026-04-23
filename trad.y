@@ -92,10 +92,6 @@ programa:       declaraciones_opt funciones_opt funcion_main  { sprintf (temp, "
                                               $$.code = gen_code (temp) ; }
             ;
 
-// TIPOS PARA LAS VARIABLES
-tipo:   INTEGER     { $$.code = gen_code ($1.code); }
-    ;
-
 // DECLARACIONES GLOBALES
 declaraciones_opt:  /* vacio */              { $$.code = gen_code ("") ; }
             |   declaracion declaraciones_opt   { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
@@ -105,10 +101,10 @@ declaraciones_opt:  /* vacio */              { $$.code = gen_code ("") ; }
             ;
 
 // Ponemos el ';' para obligar a que las variables globales acaben en punto y coma
-declaracion:    tipo lista_vars ';'      { $$ = $2 ; }
+declaracion:    INTEGER lista_vars ';'      { $$ = $2 ; }
             ;
 
-declaracion_vector:     tipo IDENTIF '[' NUMBER ']' ';'     { sprintf (temp, "(setq %s (make-array %d))", get_var_name($2.code), $4.value) ;
+declaracion_vector:     INTEGER IDENTIF '[' NUMBER ']' ';'     { sprintf (temp, "(setq %s (make-array %d))", get_var_name($2.code), $4.value) ;
                                                             $$.code = gen_code (temp) ; }
             ;
 
@@ -134,10 +130,10 @@ declaraciones_locales_opt:  /* vacío */         { $$.code = gen_code("") ; }
                                               } }
                     ;
 
-declarar_local: tipo IDENTIF ';'         { add_local_var($2.code) ;
+declarar_local: INTEGER IDENTIF ';'         { add_local_var($2.code) ;
                                               sprintf (temp, "(setq %s_%s 0)", nombre_funcion, $2.code) ;
                                               $$.code = gen_code (temp) ; }
-            |   tipo IDENTIF '=' expresion ';' {
+            |   INTEGER IDENTIF '=' expresion ';' {
                                               add_local_var($2.code) ;
                                               sprintf (temp, "(setq %s_%s %s)", nombre_funcion, $2.code, $4.code) ;
                                               $$.code = gen_code (temp) ; }
@@ -168,7 +164,7 @@ lista_parametros:       parametro                             { $$.code = gen_co
                                                             $$.code = gen_code (temp) ; }
             ;
 
-parametro:              tipo IDENTIF    { $$.code = gen_code ($2.code) ; }
+parametro:              INTEGER IDENTIF    { $$.code = gen_code ($2.code) ; }
             ;
 
 lista_argumentos_opt:   /* vacio */                         { $$.code = gen_code ("") ; }

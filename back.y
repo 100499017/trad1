@@ -118,52 +118,54 @@ ifHead:       IF expression                     { printf (" IF ") ; }        // 
             ;
 
 
-expression:   operand                                   { ; }                // Common expressions combine arithmetic, relational and boolean expressions, including base operands.
+expression:   operand                           { ; }                // Common expressions combine arithmetic, relational and boolean expressions, including base operands.
 
             // Operadores Aritméticos
 
-            | '(' '+' expression expression ')'         { printf (" + ") ; }
+            | '(' '+' expression expression ')' { printf (" + ") ; }
 
-            | '(' '-' expression expression ')'         { printf (" - ") ; }      // binary minus operator 
+            | '(' '-' expression expression ')' { printf (" - ") ; }      // binary minus operator 
 
-            | '(' '*' expression expression ')'         { printf (" * ") ; }
+            | '(' '*' expression expression ')' { printf (" * ") ; }
 
-            | '(' '/' expression expression ')'         { printf (" / ") ; }
+            | '(' '/' expression expression ')' { printf (" / ") ; }
 
-            | '(' MOD expression expression ')'         { printf (" mod ") ; }
+            | '(' MOD expression expression ')' { printf (" mod ") ; }
 
             // Operadores Relacionales
             
-            | '(' '=' expression expression ')'         { printf (" = ") ; }
+            | '(' '=' expression expression ')' { printf (" = ") ; }
 
-            | '(' '<' expression expression ')'         { printf (" < ") ; }
+            | '(' '<' expression expression ')' { printf (" < ") ; }
 
-            | '(' '>' expression expression ')'         { printf (" > ") ; }
+            | '(' '>' expression expression ')' { printf (" > ") ; }
 
-            | '(' LEQ expression expression ')'         { printf (" <= ") ; }
+            | '(' LEQ expression expression ')' { printf (" <= ") ; }
 
-            | '(' GEQ expression expression ')'         { printf (" >= ") ; }
+            | '(' GEQ expression expression ')' { printf (" >= ") ; }
 
-            | '(' NEQ expression expression ')'         { printf (" = 0= ") ; }
+            | '(' NEQ expression expression ')' { printf (" = 0= ") ; }
 
             // Operadores Lógicos
 
-            | '(' AND expression expression ')'         { printf (" and ") ; }
-            | '(' OR expression expression ')'          { printf (" or ") ; }
-            | '(' NOT expression ')'                    { printf (" 0= ") ; }
+            | '(' AND expression expression ')' { printf (" and ") ; }
+
+            | '(' OR expression expression ')'  { printf (" or ") ; }
+
+            | '(' NOT expression ')'            { printf (" 0= ") ; }
 
             // Signo
 
-            | '(' '-' expression ')'                    { printf (" negate ") ; } // Unary minus operator in Lisp
+            | '(' '-' expression ')'            { printf (" negate ") ; } // Unary minus operator in Lisp
             ;
 
 
-operand:      IDENTIF                            { printf (" %s @ ", $1.code) ; } // To use a variable as an operand requires adding the fetch operator (@)
-            | number                             { ; }
+operand:      IDENTIF                           { printf (" %s @ ", $1.code) ; } // To use a variable as an operand requires adding the fetch operator (@)
+            | number                            { ; }
             ;
 
 
-number:       NUMBER                             { printf (" %d ", $1.value) ; }  // number is an auxiliary Non Terminal to be used in the setq initialization
+number:       NUMBER                            { printf (" %d ", $1.value) ; }  // number is an auxiliary Non Terminal to be used in the setq initialization
             ;
 
 
