@@ -97,12 +97,11 @@ programa:       declaraciones_opt funciones_opt funcion_main  { $$.code = gen_co
 declaraciones_opt:  /* vacio */             { $$.code = gen_code ("") ; }
             |   declaracion                 { printf ("%s\n", $1.code) ; }
                 declaraciones_opt
-            |   declaracion_vector          { printf ("%s\n", $1.code) ; }
-                declaraciones_opt
             ;
 
 // Pueden declararse en una misma línea una o varias variables (separadas por coma)
 declaracion:    INTEGER lista_vars ';'      { $$ = $2 ; }
+            |   declaracion_vector          { $$ = $1 ; }
             ;
 
 lista_vars:     var_decl                    { $$ = $1 ; }
@@ -117,7 +116,7 @@ var_decl:       IDENTIF                     { sprintf (temp, "(setq %s 0)", $1.c
             ;
 
 declaracion_vector:     INTEGER IDENTIF '[' NUMBER ']' ';' {
-                                              sprintf (temp, "(setq %s (make-array %d))", get_var_name($2.code), $4.value) ;
+                                              sprintf (temp, "(setq %s (make-array %d))", $2.code, $4.value) ;
                                               $$.code = gen_code (temp) ;
                                             }
             ;
@@ -169,7 +168,10 @@ declaracion_local: INTEGER IDENTIF ';'      { add_local_var($2.code) ;
                                               add_local_var($2.code) ;
                                               sprintf (temp, "(setq %s_%s %s)", nombre_funcion, $2.code, $4.code) ;
                                               $$.code = gen_code (temp) ; }
-            |   declaracion_vector          { $$ = $1 ; }  
+            |   INTEGER IDENTIF '[' NUMBER ']' ';' { add_local_var($2.code) ;
+                                              sprintf (temp, "(setq %s_%s (make-array %d))", nombre_funcion, $2.code, $4.value) ;
+                                              $$.code = gen_code (temp) ;
+                                            }  
             ;
 
 /******************** FUNCIÓN MAIN ********************/
@@ -283,7 +285,7 @@ operando:       IDENTIF                     { sprintf (temp, "%s", get_var_name(
             |   NUMBER                      { sprintf (temp, "%d", $1.value) ;
                                               $$.code = gen_code (temp) ; }
             |   '(' expresion ')'           { $$.code = gen_code ($2.code) ; }
-            |   IDENTIF '(' lista_argumentos_opt ')'    { sprintf (temp, "(%s %s)", get_var_name($1.code), $3.code) ; 
+            |   IDENTIF '(' lista_argumentos_opt ')'    { sprintf (temp, "(%s %s)", $1.code, $3.code) ; 
                                                         $$.code = gen_code (temp) ; }
             |   IDENTIF '[' expresion ']'   { sprintf (temp, "(aref %s %s)", get_var_name($1.code), $3.code) ; 
                                             $$.code = gen_code (temp) ; } 
