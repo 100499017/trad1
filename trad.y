@@ -84,30 +84,28 @@ typedef struct s_attr {
 
 %%                            // Seccion 3 Gramatica - Semantico
 
-axioma:         programa                    { printf ("%s\n", $1.code) ; }
+axioma:         programa                    { $$.code = gen_code ("") ; }
             ;
 
 // Estructura principal: Variables globales (opcionales), funciones (opcionales), función main (obligatoria)
-programa:       declaraciones_opt funciones_opt funcion_main  {
-                                              sprintf (temp, "%s\n%s\n%s", $1.code, $2.code, $3.code) ;
-                                              $$.code = gen_code (temp) ;
-                                            }
+programa:       declaraciones_opt funciones_opt funcion_main  { $$.code = gen_code ("") ; }
             ;
 
 /******************** DECLARACIONES DE VARIABLES GLOBALES ********************/
 
 // Declaraciones de variables globales (opcional)
-declaraciones_opt:  /* vacio */                         { $$.code = gen_code ("") ; }
-            |   declaracion declaraciones_opt           { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
-                                                          $$.code = gen_code (temp) ; }
+declaraciones_opt:  /* vacio */             { $$.code = gen_code ("") ; }
+            |   declaracion                 { printf ("%s\n", $1.code) ; }
+                declaraciones_opt
+            |   declaracion_vector          { printf ("%s\n", $1.code) ; }
+                declaraciones_opt
             ;
 
 // Pueden declararse en una misma línea una o varias variables (separadas por coma)
 declaracion:    INTEGER lista_vars ';'      { $$ = $2 ; }
-            |   declaracion_vector          { $$ = $1 ; }
             ;
 
-lista_vars:     var_decl                    { $$.code = gen_code ($1.code) ; }
+lista_vars:     var_decl                    { $$ = $1 ; }
             |   var_decl ',' lista_vars     { sprintf (temp, "%s %s", $1.code, $3.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
@@ -119,7 +117,7 @@ var_decl:       IDENTIF                     { sprintf (temp, "(setq %s 0)", $1.c
             ;
 
 declaracion_vector:     INTEGER IDENTIF '[' NUMBER ']' ';' {
-                                              sprintf (temp, "(setq %s (make-array %d))", $2.code, $4.value) ;
+                                              sprintf (temp, "(setq %s (make-array %d))", get_var_name($2.code), $4.value) ;
                                               $$.code = gen_code (temp) ;
                                             }
             ;
@@ -127,8 +125,8 @@ declaracion_vector:     INTEGER IDENTIF '[' NUMBER ']' ';' {
 /******************** FUNCIONES GENÉRICAS ********************/
 
 funciones_opt:  /* vacio */                 { $$.code = gen_code("") ; }
-            |   funcion funciones_opt       { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
-                                              $$.code = gen_code (temp) ; }
+            |   funcion                     { printf ("%s\n", $1.code) ; }
+                funciones_opt
             ;
 
 funcion:        IDENTIF                     {nombre_funcion = gen_code ($1.code) ; }
@@ -142,22 +140,22 @@ funcion:        IDENTIF                     {nombre_funcion = gen_code ($1.code)
             ;
 
 lista_parametros_opt:   /* vacio */                         { $$.code = gen_code ("") ; }
-            |           lista_parametros                    { $$.code = gen_code ($1.code) ; }
+            |           lista_parametros                    { $$ = $1 ; }
             ;
 
-lista_parametros:       parametro                             { $$.code = gen_code ($1.code) ; }
+lista_parametros:       parametro                             { $$ = $1 ; }
             |           parametro ',' lista_parametros    { sprintf(temp, "%s %s", $1.code, $3.code) ;
                                                             $$.code = gen_code (temp) ; }
             ;
 
-parametro:              INTEGER IDENTIF    { $$.code = gen_code ($2.code) ; }
+parametro:              INTEGER IDENTIF    { $$ = $2 ; }
             ;
 
 // Declaraciones de variables locales en una función (opcional)
 declaraciones_locales_opt: /* vacío */      { $$.code = gen_code("") ; }
                     |   declaracion_local declaraciones_locales_opt {
                                               if (strlen($2.code) == 0) {
-                                                  $$.code = gen_code($1.code) ;
+                                                  $$ = $1 ;
                                               } else {
                                                   sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                                   $$.code = gen_code (temp) ;
@@ -171,10 +169,7 @@ declaracion_local: INTEGER IDENTIF ';'      { add_local_var($2.code) ;
                                               add_local_var($2.code) ;
                                               sprintf (temp, "(setq %s_%s %s)", nombre_funcion, $2.code, $4.code) ;
                                               $$.code = gen_code (temp) ; }
-            |   INTEGER IDENTIF '[' NUMBER ']' ';' { add_local_var($2.code) ;
-                                              sprintf (temp, "(setq %s_%s (make-array %d))", nombre_funcion, $2.code, $4.value) ;
-                                              $$.code = gen_code (temp) ;
-                                            }  
+            |   declaracion_vector          { $$ = $1 ; }  
             ;
 
 /******************** FUNCIÓN MAIN ********************/
@@ -186,7 +181,8 @@ funcion_main:   MAIN                        { nombre_funcion = gen_code ($1.code
                                               } else {
                                                   sprintf (temp, "(defun main ()\n%s\n%s\n)", $6.code, $7.code) ;
                                               }
-                                              $$.code = gen_code (temp) ;
+                                              printf ("%s\n", temp) ;
+                                              $$.code = gen_code ("") ;
                                             }
             ;
 
@@ -287,7 +283,7 @@ operando:       IDENTIF                     { sprintf (temp, "%s", get_var_name(
             |   NUMBER                      { sprintf (temp, "%d", $1.value) ;
                                               $$.code = gen_code (temp) ; }
             |   '(' expresion ')'           { $$.code = gen_code ($2.code) ; }
-            |   IDENTIF '(' lista_argumentos_opt ')'    { sprintf (temp, "(%s %s)", $1.code, $3.code) ; 
+            |   IDENTIF '(' lista_argumentos_opt ')'    { sprintf (temp, "(%s %s)", get_var_name($1.code), $3.code) ; 
                                                         $$.code = gen_code (temp) ; }
             |   IDENTIF '[' expresion ']'   { sprintf (temp, "(aref %s %s)", get_var_name($1.code), $3.code) ; 
                                             $$.code = gen_code (temp) ; } 
@@ -312,7 +308,7 @@ bloque_condicional:     sentencia           { $$ = $1 ; }
                                               $$.code = gen_code (temp) ; }
                     ;
 
-// Regla para capturar 2 o más sentencias
+// Regla para capturar 2 o mas sentencias
 lista_varias_sentencias:    sentencia sentencia {
                                               sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
@@ -329,7 +325,7 @@ operacion_inc_dec:  INC '(' IDENTIF ')'     { sprintf (temp, "(setf %s (+ %s 1))
             ;
 
 // Reglas para los casos del switch
-casos:          caso                        { $$.code = gen_code ($1.code) ; }
+casos:          caso                        { $$ = $1 ; }
             |   caso casos                  { sprintf (temp, "%s\n%s", $1.code, $2.code) ;
                                               $$.code = gen_code (temp) ; }
             ;
@@ -350,12 +346,12 @@ default_opt:    /* vacío */                 { $$.code = gen_code ("") ; }
 // Argumentos al llamar a una función
 
 lista_argumentos_opt:   /* vacio */                         { $$.code = gen_code ("") ; }
-            |           lista_argumentos                    { $$.code = gen_code ($1.code) ; }
+            |           lista_argumentos                    { $$ = $1 ; }
             ;
 
-lista_argumentos:       expresion                           { $$.code = gen_code ($1.code) ; }
-            |           expresion ',' lista_argumentos          { sprintf (temp, "%s %s", $1.code, $3.code) ; 
-                                                            $$.code = gen_code (temp) ; }
+lista_argumentos:       expresion                           { $$ = $1 ; }
+            |           expresion ',' lista_argumentos      { sprintf (temp, "%s %s", $1.code, $3.code) ; 
+                                                              $$.code = gen_code (temp) ; }
             ;
 
 %%                            // SECCION 4    Codigo en C

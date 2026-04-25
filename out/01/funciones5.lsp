@@ -1,4 +1,3 @@
-
 (defun mimax (a b)
 (if (>= a b)
 (progn (princ a)
@@ -8,7 +7,6 @@
 )
 
 )
-
 (defun main ()
 (mimax 10 1)
 (mimax 1 10)

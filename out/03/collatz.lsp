@@ -1,4 +1,3 @@
-
 (defun collatz (n cont)
 (setq collatz_retorno 0)
 (progn (princ n)
@@ -13,7 +12,6 @@
 (return-from collatz collatz_retorno)
 
 )
-
 (defun main ()
 (setq main_resultado 0)
 (setq main_i 0)

@@ -1,5 +1,3 @@
-
-
 (defun main ()
 (setq arr (make-array 5))
 (setq main_local_var 42)

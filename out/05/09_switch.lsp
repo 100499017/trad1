@@ -1,6 +1,4 @@
 (setq opcion 2)
-
-
 (defun main ()
 (print "Probando switch:")
 (case opcion

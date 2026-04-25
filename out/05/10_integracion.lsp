@@ -1,5 +1,4 @@
 (setq global_val 0)
-
 (defun procesar (x)
 (case x
 (1
@@ -11,7 +10,6 @@
 (return-from procesar global_val)
 
 )
-
 (defun main ()
 (setq main_i 0)
 (setq vector (make-array 3))

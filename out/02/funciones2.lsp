@@ -1,4 +1,3 @@
-
 (defun mifuncion ()
 (setq mifuncion_c 0)
 (setf mifuncion_c 123)
@@ -6,7 +5,6 @@
 (return-from mifuncion (+ mifuncion_c 1))
 
 )
-
 (defun main ()
 (setq main_c 0)
 (setf main_c (mifuncion ))

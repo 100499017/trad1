@@ -1,4 +1,3 @@
-
 (defun fibonacci (a b n)
 (setq fibonacci_retorno 0)
 (if (< n 2)
@@ -7,7 +6,6 @@
 )
 
 )
-
 (defun main ()
 (setq main_resultado 0)
 (setq main_i 0)

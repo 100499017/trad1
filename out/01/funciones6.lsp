@@ -1,4 +1,3 @@
-
 (defun factoriala (n f fm)
 (if (= n 1)
 (progn (princ f)
@@ -12,7 +11,6 @@
 (print "")
 
 )
-
 (defun main ()
 (factorialwrapper 1)
 (factorialwrapper 2)

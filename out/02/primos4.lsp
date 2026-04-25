@@ -1,7 +1,6 @@
 (setq d 0)
 (setq n 0)
 (setq m 0)
-
 (defun esprimo (n)
 (setq esprimo_primo 0)
 (setq esprimo_d 0)
@@ -26,7 +25,6 @@
 )
 
 )
-
 (defun main ()
 (setq main_d 0)
 (setq main_i 0)

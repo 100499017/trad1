@@ -1,6 +1,4 @@
 (setq j 0)
-
-
 (defun main ()
 (print "Bucle for ascendente:")
 (setf j 0)

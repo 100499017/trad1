@@ -1,6 +1,4 @@
 (setq i 0)
-
-
 (defun main ()
 (print "Contando con while:")
 (loop while (< i 3) do

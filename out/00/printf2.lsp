@@ -1,5 +1,3 @@
-
-
 (defun main ()
 (progn (princ (+ 123 1))
 (princ " el texto se imprime ") (princ (+ 124 1)))

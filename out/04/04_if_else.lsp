@@ -1,6 +1,4 @@
 (setq num 10)
-
-
 (defun main ()
 (if (> num 20)
 (print "El numero es mayor que 20")
